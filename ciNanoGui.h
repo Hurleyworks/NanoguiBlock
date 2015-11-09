@@ -46,7 +46,7 @@
 #include "NanoguiModule/nanogui/vscrollpanel.h"
 #include "NanoguiModule/nanogui/slider.h"
 #include "NanoguiModule/util/Performance.h"
-#include "NanoguiModule/util/ShaderSource.h"
+
 
 
 
