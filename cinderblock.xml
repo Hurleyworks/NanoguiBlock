@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cinder>
+<block
+	name="ciNanogui"
+	id="com.hurleyworks.nanoguiblock"
+	author="Steve Hurley"
+	license="BSD-style license"
+	summary="Port of Wenzel Jakob's NanogGUI widget library"
+	url="https://github.com/Hurleyworks/NanoguiBlock"
+	git="git://github.com/Hurleyworks/NanoguiBlock.git"
+	>
+	<supports os="macosx" />
+	<supports os="msw" />
+
+	<copyExclude>samples</copyExclude>
+	<header>ciNanoGui.h</header>
+	<source>ciNanoGui.cpp</source>
+</block>
+</cinder>
