@@ -12,7 +12,7 @@
 	<supports os="macosx" />
 	<supports os="msw" />
 
-	<copyExclude>samples</copyExclude>
+	<copyExclude>sample</copyExclude>
 	<header>ciNanoGui.h</header>
 	<source>ciNanoGui.cpp</source>
 </block>
