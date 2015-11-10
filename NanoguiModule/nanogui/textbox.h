@@ -16,7 +16,7 @@
 
 NAMESPACE_BEGIN (nanogui)
 
-class  TextBox : public Widget
+class  TxtBox : public Widget
 {
    public:
       enum class Alignment
@@ -26,7 +26,7 @@ class  TextBox : public Widget
          Right
       };
 
-      TextBox (Widget * parent, const std::string & value = "Untitled");
+      TxtBox (Widget * parent, const std::string & value = "Untitled");
 
       bool editable() const
       {
@@ -144,10 +144,10 @@ class  TextBox : public Widget
       double mLastClick;
 };
 
-template <typename Scalar> class IntBox : public TextBox
+template <typename Scalar> class IntBox : public TxtBox
 {
    public:
-      IntBox (Widget * parent, Scalar value = (Scalar) 0) : TextBox (parent)
+      IntBox (Widget * parent, Scalar value = (Scalar) 0) : TxtBox (parent)
       {
          setDefaultValue ("0");
          setFormat (std::is_signed<Scalar>::value ? "[-]?[0-9]*" : "[0-9]*");
@@ -157,7 +157,7 @@ template <typename Scalar> class IntBox : public TextBox
       Scalar value() const
       {
          Scalar value;
-         std::istringstream iss (TextBox::value());
+         std::istringstream iss (TxtBox::value());
          if (! (iss >> value))
             throw std::invalid_argument ("Could not parse integer value!");
          return value;
@@ -165,12 +165,12 @@ template <typename Scalar> class IntBox : public TextBox
 
       void setValue (Scalar value)
       {
-         TextBox::setValue (std::to_string (value));
+         TxtBox::setValue (std::to_string (value));
       }
 
       void setCallback (const std::function<void (Scalar)> & cb)
       {
-         TextBox::setCallback (
+         TxtBox::setCallback (
             [cb] (const std::string & str)
          {
             std::istringstream iss (str);
@@ -184,10 +184,10 @@ template <typename Scalar> class IntBox : public TextBox
       }
 };
 
-template <typename Scalar> class FloatBox : public TextBox
+template <typename Scalar> class FloatBox : public TxtBox
 {
    public:
-      FloatBox (Widget * parent, Scalar value = (Scalar) 0.f) : TextBox (parent)
+      FloatBox (Widget * parent, Scalar value = (Scalar) 0.f) : TxtBox (parent)
       {
          setDefaultValue ("0");
          setFormat ("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?");
@@ -196,19 +196,19 @@ template <typename Scalar> class FloatBox : public TextBox
 
       Scalar value() const
       {
-         return (Scalar) std::stod (TextBox::value());
+         return (Scalar) std::stod (TxtBox::value());
       }
 
       void setValue (Scalar value)
       {
          char buffer[30];
          snprintf (buffer, 30, sizeof (Scalar) == sizeof (float) ? "%.4g" : "%.7g", value);
-         TextBox::setValue (buffer);
+         TxtBox::setValue (buffer);
       }
 
       void setCallback (const std::function<void (Scalar)> & cb)
       {
-         TextBox::setCallback (
+         TxtBox::setCallback (
             [cb] (const std::string & str)
          {
             cb ((Scalar) std::stod (str));

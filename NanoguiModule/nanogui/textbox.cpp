@@ -14,7 +14,7 @@
 
 NAMESPACE_BEGIN (nanogui)
 
-TextBox::TextBox (Widget * parent, const std::string & value)
+TxtBox::TxtBox (Widget * parent, const std::string & value)
    : Widget (parent),
      mEditable (false),
      mCommitted (true),
@@ -38,13 +38,13 @@ TextBox::TextBox (Widget * parent, const std::string & value)
    mFontSize = mTheme->mTextBoxFontSize;
 }
 
-void TextBox::setEditable (bool editable)
+void TxtBox::setEditable (bool editable)
 {
    mEditable = editable;
    setCursor (editable ? Cursor::IBeam : Cursor::Arrow);
 }
 
-ivec2 TextBox::preferredSize (NVGcontext * ctx) const
+ivec2 TxtBox::preferredSize (NVGcontext * ctx) const
 {
 
 	ivec2 size(0, fontSize() * 1.4f);
@@ -64,7 +64,7 @@ ivec2 TextBox::preferredSize (NVGcontext * ctx) const
 	return size;
 }
 
-void TextBox::draw (NVGcontext * ctx)
+void TxtBox::draw (NVGcontext * ctx)
 {
    Widget::draw (ctx);
    NVGpaint bg = nvgBoxGradient (ctx,
@@ -209,7 +209,7 @@ void TextBox::draw (NVGcontext * ctx)
    nvgResetScissor (ctx);
 }
 
-bool TextBox::mouseButtonEvent (const ivec2 & p, int button, bool down,
+bool TxtBox::mouseButtonEvent (const ivec2 & p, int button, bool down,
                                 int modifiers)
 {
    Widget::mouseButtonEvent (p, button, down, modifiers);
@@ -239,7 +239,7 @@ bool TextBox::mouseButtonEvent (const ivec2 & p, int button, bool down,
    return false;
 }
 
-bool TextBox::mouseMotionEvent (const ivec2 & p, const ivec2 & /* rel */,
+bool TxtBox::mouseMotionEvent (const ivec2 & p, const ivec2 & /* rel */,
                                 int /* button */, int /* modifiers */)
 {
    if (mEditable && focused())
@@ -250,7 +250,7 @@ bool TextBox::mouseMotionEvent (const ivec2 & p, const ivec2 & /* rel */,
    return false;
 }
 
-bool TextBox::mouseDragEvent (const ivec2 & p, const ivec2 & /* rel */,
+bool TxtBox::mouseDragEvent (const ivec2 & p, const ivec2 & /* rel */,
                               int /* button */, int /* modifiers */)
 {
    if (mEditable && focused())
@@ -261,13 +261,13 @@ bool TextBox::mouseDragEvent (const ivec2 & p, const ivec2 & /* rel */,
    return false;
 }
 
-bool TextBox::mouseEnterEvent (const ivec2 & p, bool enter)
+bool TxtBox::mouseEnterEvent (const ivec2 & p, bool enter)
 {
    Widget::mouseEnterEvent (p, enter);
    return false;
 }
 
-bool TextBox::focusEvent (bool focused)
+bool TxtBox::focusEvent (bool focused)
 {
    Widget::focusEvent (focused);
    std::string backup = mValue;
@@ -301,7 +301,7 @@ bool TextBox::focusEvent (bool focused)
    return true;
 }
 
-bool TextBox::keyboardEvent (int key, int /* scancode */, int action, int modifiers)
+bool TxtBox::keyboardEvent (int key, int /* scancode */, int action, int modifiers)
 {
    if (mEditable && focused())
    {
@@ -412,7 +412,7 @@ bool TextBox::keyboardEvent (int key, int /* scancode */, int action, int modifi
    return false;
 }
 
-bool TextBox::keyboardCharacterEvent (unsigned int codepoint)
+bool TxtBox::keyboardCharacterEvent (unsigned int codepoint)
 {
    if (mEditable && focused())
    {
@@ -427,7 +427,7 @@ bool TextBox::keyboardCharacterEvent (unsigned int codepoint)
    return false;
 }
 
-bool TextBox::checkFormat (const std::string & input, const std::string & format)
+bool TxtBox::checkFormat (const std::string & input, const std::string & format)
 {
    if (format.empty())
       return true;
@@ -435,7 +435,7 @@ bool TextBox::checkFormat (const std::string & input, const std::string & format
    return regex_match (input, regex);
 }
 
-bool TextBox::copySelection()
+bool TxtBox::copySelection()
 {
    if (mSelectionPos > -1)
    {
@@ -452,7 +452,7 @@ bool TextBox::copySelection()
    return false;
 }
 
-void TextBox::pasteFromClipboard()
+void TxtBox::pasteFromClipboard()
 {
    Screen * sc = dynamic_cast<Screen *> (this->window()->parent());
    std::string str = cinder::Clipboard::getString();
@@ -460,7 +460,7 @@ void TextBox::pasteFromClipboard()
    mValueTemp.insert (mCursorPos, str);
 }
 
-bool TextBox::deleteSelection()
+bool TxtBox::deleteSelection()
 {
    if (mSelectionPos > -1)
    {
@@ -480,7 +480,7 @@ bool TextBox::deleteSelection()
    return false;
 }
 
-void TextBox::updateCursor (NVGcontext *, float lastx,
+void TxtBox::updateCursor (NVGcontext *, float lastx,
                             const NVGglyphPosition * glyphs, int size)
 {
    // handle mouse cursor events
@@ -515,7 +515,7 @@ void TextBox::updateCursor (NVGcontext *, float lastx,
       mSelectionPos = -1;
 }
 
-float TextBox::cursorIndex2Position (int index, float lastx,
+float TxtBox::cursorIndex2Position (int index, float lastx,
                                      const NVGglyphPosition * glyphs, int size)
 {
    float pos = 0;
@@ -526,7 +526,7 @@ float TextBox::cursorIndex2Position (int index, float lastx,
    return pos;
 }
 
-int TextBox::position2CursorIndex (float posx, float lastx,
+int TxtBox::position2CursorIndex (float posx, float lastx,
                                    const NVGglyphPosition * glyphs, int size)
 {
    int mCursorId = 0;

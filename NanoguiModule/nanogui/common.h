@@ -196,7 +196,7 @@ class PopupButton;
 class ProgressBar;
 class Screen;
 class Slider;
-class TextBox;
+class TxtBox;
 class Theme;
 class ToolButton;
 class VScrollPanel;
