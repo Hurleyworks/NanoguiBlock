@@ -14,7 +14,8 @@ void NanoApp::setup()
 {
    fs::path p = getAssetPath("icons");
    gui = std::make_shared<View>();
-   gui->create (getWindow(), p.parent_path());
+   auto wnd = getWindow();
+   gui->create (wnd, p.parent_path());
 }
 
 void NanoApp::update()
