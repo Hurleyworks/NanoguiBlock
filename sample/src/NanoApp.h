@@ -41,7 +41,7 @@ class NanoApp : public App
       Color bgColor = Color (0.1f, 0.11f, 0.12f);
 
       void render();
-      void cleanup();
+      void cleanup() override;
 
       void drawGrid (float size = 100.0f, float step = 10.0f);
 };

@@ -9,8 +9,10 @@
 
 typedef std::shared_ptr<class View> ViewRef;
 
-class nanogui::ProgressBar;
-
+namespace nanogui
+{
+class ProgressBar;
+};
 using namespace ci::app;
 
 class View : public nanogui::Screen

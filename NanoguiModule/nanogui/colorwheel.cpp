@@ -284,7 +284,7 @@ Colour ColorWheel::color() const {
 	Colour rgb = hue2rgb(mHue);
 	Colour black{ 0.f, 0.f, 0.f, 1.f };
 	Colour white{ 1.f, 1.f, 1.f, 1.f };
-	return rgb * (1 - mWhite - mBlack) + black * mBlack + white * mWhite;
+    return nanogui::Colour(rgb * (1 - mWhite - mBlack) + black * mBlack + white * mWhite);
 }
 
 void ColorWheel::setColor(const Colour &rgb)
