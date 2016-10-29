@@ -50,7 +50,7 @@ void Screen::drawWidgets()
    ci::gl::ScopedVao scopedVao (nullptr);
    ci::gl::ScopedTextureBind text2 (GL_TEXTURE_2D, 0);
    ci::gl::ScopedTextureBind text3(GL_TEXTURE_3D, 0);
-   ci::gl::ScopedDepth depth(false, false);  // FIXME causes GL errors
+   ci::gl::ScopedDepth depth(false, GL_LESS);
 
    nvgEndFrame (mNVGContext);
 }
