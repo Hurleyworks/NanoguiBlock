@@ -3,18 +3,20 @@
 
     The grid layout was contributed by Christian Schueller.
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
 NAMESPACE_BEGIN (nanogui)
 
+/// The different kinds of alignments a layout can perform.
 enum class Alignment : uint8_t
 {
    Minimum = 0,
@@ -23,13 +25,18 @@ enum class Alignment : uint8_t
    Fill
 };
 
+/// The direction of data flow for a layout.
 enum class Orientation
 {
    Horizontal = 0,
    Vertical
 };
 
-/// Basic interface of a layout engine
+/**
+ * \class Layout layout.h nanogui/layout.h
+ *
+ * \brief Basic interface of a layout engine.
+ */
 class  Layout : public Object
 {
    public:
@@ -40,24 +47,29 @@ class  Layout : public Object
 };
 
 /**
-   \brief Simple horizontal/vertical box layout
-
-   This widget stacks up a bunch of widgets horizontally or vertically. It adds
-   margins around the entire container and a custom spacing between adjacent
-   widgets
+ * \class BoxLayout layout.h nanogui/layout.h
+ *
+ * \brief Simple horizontal/vertical box layout
+ *
+ * This widget stacks up a bunch of widgets horizontally or vertically. It adds
+ * margins around the entire container and a custom spacing between adjacent
+ * widgets.
 */
 class  BoxLayout : public Layout
 {
    public:
       /**
-         \brief Construct a box layout which packs widgets in the given \c orientation
-         \param alignment
-            Widget alignment perpendicular to the chosen orientation.
-         \param margin
-            Margin around the layout container
-         \param spacing
-            Extra spacing placed between widgets
-      */
+       * \brief Construct a box layout which packs widgets in the given \c Orientation
+       *
+       * \param alignment
+       *     Widget alignment perpendicular to the chosen orientation
+       *
+       * \param margin
+       *     Margin around the layout container
+       *
+       * \param spacing
+       *     Extra spacing placed between widgets
+       */
       BoxLayout (Orientation orientation, Alignment alignment = Alignment::Middle,
                  int margin = 0, int spacing = 0);
 
@@ -98,8 +110,8 @@ class  BoxLayout : public Layout
       }
 
       /* Implementation of the layout interface */
-      ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const;
-      void performLayout (NVGcontext * ctx, Widget * widget) const;
+      virtual ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const override;
+      virtual void performLayout (NVGcontext * ctx, Widget * widget) const override;
 
    protected:
       Orientation mOrientation;
@@ -109,15 +121,17 @@ class  BoxLayout : public Layout
 };
 
 /**
-   \brief Special layout for widgets grouped by labels
-
-   This widget resembles a box layout in that it arranges a set of widgets
-   vertically. All widgets are indented on the horizontal axis except for
-   \ref Label widgets, which are not indented.
-
-   This creates a pleasing layout where a number of widgets are grouped
-   under some high-level heading.
-*/
+ * \class GroupLayout layout.h nanogui/layout.h
+ *
+ * \brief Special layout for widgets grouped by labels.
+ *
+ * This widget resembles a box layout in that it arranges a set of widgets
+ * vertically. All widgets are indented on the horizontal axis except for
+ * \ref Label widgets, which are not indented.
+ *
+ * This creates a pleasing layout where a number of widgets are grouped
+ * under some high-level heading.
+ */
 class  GroupLayout : public Layout
 {
    public:
@@ -163,8 +177,8 @@ class  GroupLayout : public Layout
       }
 
       /* Implementation of the layout interface */
-      ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const;
-      void performLayout (NVGcontext * ctx, Widget * widget) const;
+      virtual ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const override;
+      virtual void performLayout (NVGcontext * ctx, Widget * widget) const override;
 
    protected:
       int mMargin;
@@ -174,14 +188,16 @@ class  GroupLayout : public Layout
 };
 
 /**
-   \brief Grid layout
-
-   Widgets are arranged in a grid that has a fixed grid resolution \c resolution
-   along one of the axes. The layout orientation indicates the fixed dimension;
-   widgets are also appended on this axis. The spacing between items can be
-   specified per axis. The horizontal/vertical alignment can be specified per
-   row and column.
-*/
+ * \class GridLayout layout.h nanogui/layout.h
+ *
+ * \brief Grid layout.
+ *
+ * Widgets are arranged in a grid that has a fixed grid resolution \c resolution
+ * along one of the axes. The layout orientation indicates the fixed dimension;
+ * widgets are also appended on this axis. The spacing between items can be
+ * specified per axis. The horizontal/vertical alignment can be specified per
+ * row and column.
+ */
 class  GridLayout : public Layout
 {
    public:
@@ -260,8 +276,8 @@ class  GridLayout : public Layout
       }
 
       /* Implementation of the layout interface */
-      ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const;
-      void performLayout (NVGcontext * ctx, Widget * widget) const;
+      virtual ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const override;
+      virtual void performLayout (NVGcontext * ctx, Widget * widget) const override;
 
    protected:
       // Compute the maximum row and column sizes
@@ -278,36 +294,47 @@ class  GridLayout : public Layout
 };
 
 /**
-   \brief Advanced Grid layout
-
-   The is a fancier grid layout with support for items that span multiple rows
-   or columns, and per-widget alignment flags. Each row and column additionally
-   stores a stretch factor that controls how additional space is redistributed.
-   The downside of this flexibility is that a layout anchor data structure must
-   be provided for each widget.
-
-   An example:
-
-   <pre>
-     using AdvancedGridLayout::Anchor;
-     Label *label = new Label(window, "A label");
-     // Add a centered label at grid position (1, 5), which spans two horizontal cells
-     layout->setAnchor(label, Anchor(1, 5, 2, 1, Alignent::Middle, Alignment::Middle));
-   </pre>
-
-   The grid is initialized with user-specified column and row size vectors
-   (which can be expanded later on if desired). If a size value of zero is
-   specified for a column or row, the size is set to the maximum preferred size
-   of any widgets contained in the same row or column. Any remaining space is
-   redistributed according to the row and column stretch factors.
-
-   The high level usage somewhat resembles the classic HIG layout:
-   https://web.archive.org/web/20070813221705/http://www.autel.cz/dmi/tutorial.html
-   https://github.com/jaapgeurts/higlayout
-*/
+ * \class AdvancedGridLayout layout.h nanogui/layout.h
+ *
+ * \brief Advanced Grid layout.
+ *
+ * The is a fancier grid layout with support for items that span multiple rows
+ * or columns, and per-widget alignment flags. Each row and column additionally
+ * stores a stretch factor that controls how additional space is redistributed.
+ * The downside of this flexibility is that a layout anchor data structure must
+ * be provided for each widget.
+ *
+ * An example:
+ *
+ * \rst
+ * .. code-block:: cpp
+ *
+ *    using AdvancedGridLayout::Anchor;
+ *    Label *label = new Label(window, "A label");
+ *    // Add a centered label at grid position (1, 5), which spans two horizontal cells
+ *    layout->setAnchor(label, Anchor(1, 5, 2, 1, Alignment::Middle, Alignment::Middle));
+ *
+ * \endrst
+ *
+ * The grid is initialized with user-specified column and row size vectors
+ * (which can be expanded later on if desired). If a size value of zero is
+ * specified for a column or row, the size is set to the maximum preferred size
+ * of any widgets contained in the same row or column. Any remaining space is
+ * redistributed according to the row and column stretch factors.
+ *
+ * The high level usage somewhat resembles the classic HIG layout:
+ *
+ * - https://web.archive.org/web/20070813221705/http://www.autel.cz/dmi/tutorial.html
+ * - https://github.com/jaapgeurts/higlayout
+ */
 class  AdvancedGridLayout : public Layout
 {
    public:
+      /**
+       * \struct Anchor layout.h nanogui/layout.h
+       *
+       * \brief Helper struct to coordinate anchor points for the layout.
+       */
       struct Anchor
       {
          uint8_t pos[2];
@@ -347,7 +374,7 @@ class  AdvancedGridLayout : public Layout
          }
       };
 
-      AdvancedGridLayout (const std::vector<int> & cols = {}, const std::vector<int> & rows = {});
+      AdvancedGridLayout (const std::vector<int> & cols = {}, const std::vector<int> & rows = {}, int margin = 0);
 
       int margin() const
       {
@@ -412,8 +439,8 @@ class  AdvancedGridLayout : public Layout
       }
 
       /* Implementation of the layout interface */
-      ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const;
-      void performLayout (NVGcontext * ctx, Widget * widget) const;
+      virtual ivec2 preferredSize (NVGcontext * ctx, const Widget * widget) const override;
+      virtual void performLayout (NVGcontext * ctx, Widget * widget) const override;
 
    protected:
       void computeLayout (NVGcontext * ctx, const Widget * widget,
